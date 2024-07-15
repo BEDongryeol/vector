@@ -1,0 +1,4 @@
+docker run -i \
+  -v ~/Documents/vector/web/:/etc/vector/ \
+  -v /Users/jeong-inwoo/Documents/insite/csp-was/var/log:/test/var/log \
+  --rm timberio/vector:0.39.0-debian

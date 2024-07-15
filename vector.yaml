@@ -1,0 +1,27 @@
+sources:
+  csp-web:
+    type: file
+    include:
+      - /test/var/log/csp-was.log
+    fingerprinting:
+      strategy: checksum
+
+transforms:
+  parse_log:
+    type: remap
+    inputs:
+      - csp-web
+    source: |
+      . = parse_regex!(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>[A-Z]+)\] (?P<PID>\d+) --- \[(?P<thread>.{8,15})\] (?P<logger>.*?) : (?P<message>.*)', true)
+      if exists(.timestamp) {
+        .timestamp = parse_timestamp!(.timestamp, "%Y-%m-%d %H:%M:%S")
+      }
+
+sinks:
+  out:
+    type: console
+    inputs:
+      - parse_log
+    encoding:
+      codec: json
+
