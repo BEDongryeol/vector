@@ -1,6 +1,8 @@
 # vector
 Build data pipeline with Vector
 
+# Step 1
+## Application log 파일을 source로 사용하여 console에 출력하는 pipeline
 
 # Appendix
 ## DOCS
