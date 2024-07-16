@@ -5,6 +5,14 @@ sources:
       - /test/var/log/csp-was.log
     fingerprinting:
       strategy: checksum
+    line_delimiter: "\n"
+    multiline:
+      condition_pattern: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+      start_pattern: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+      mode: halt_before
+      timeout_ms: 10
+    encoding:
+      charset: utf-8
 
 transforms:
   parse_log:
@@ -12,10 +20,10 @@ transforms:
     inputs:
       - csp-web
     source: |
-      . = parse_regex!(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>[A-Z]+)\] (?P<PID>\d+) --- \[(?P<thread>.{8,15})\] (?P<logger>.*?) : (?P<message>.*)', true)
-      if exists(.timestamp) {
-        .timestamp = parse_timestamp!(.timestamp, "%Y-%m-%d %H:%M:%S")
-      }
+      .timestamp, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$').timestamp
+      .level, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$').level
+      .message, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$').message
+      .timestamp = parse_timestamp!(.timestamp, "%Y-%m-%d %H:%M:%S")
 
 sinks:
   out:
