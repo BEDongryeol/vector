@@ -1,8 +1,13 @@
 # vector
 Build data pipeline with Vector
 
-# Step 1
-## Application log 파일을 source로 사용하여 console에 출력하는 pipeline
+## Step 1
+### Application log 파일을 source로 사용하여 console에 출력하는 pipeline
+[ISSUE-1](https://github.com/BEDongryeol/vector/blob/01728d2b3a6bae35bb4d1f96ae1a195b5e29e7c9/step1/vector.yaml)
+  - logging pattern에 따른 field 매핑 실패
+  - file은 바로 입력되지만 sink에서 즉시 출력되지 않음
+ 
+
 
 # Appendix
 ## DOCS
