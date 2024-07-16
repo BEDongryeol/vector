@@ -20,11 +20,14 @@ transforms:
     inputs:
       - csp-web
     source: |
-      .timestamp, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$').timestamp
-      .level, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$').level
-      .message, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$').message
-      .timestamp = parse_timestamp!(.timestamp, "%Y-%m-%d %H:%M:%S")
-
+      .parsed, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$')
+      if err != null {
+        log("Error parsing log message: " + err, level: "error")
+      } else {
+        .timestamp = parse_timestamp!(.parsed.timestamp, "%Y-%m-%d %H:%M:%S")
+        .level = .parsed.level
+        .message = .parsed.message
+      }
 sinks:
   out:
     type: console
