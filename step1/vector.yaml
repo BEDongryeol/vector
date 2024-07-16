@@ -21,14 +21,17 @@ transforms:
       - csp-web
     source: |
       .platform = "csp-web"
-      .parsed, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>\w+) - (?P<message>.+)$')
+      .parsed, err = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>[A-Z]+)\s*\] (?P<pid>\d+) --- \[(?P<thread>[^\]]+)\] (?P<logger>[^\s]+)\s* : (?P<message>.+)$')
       if err != null {
         log("Error parsing log message: " + err, level: "error")
       } else {
-        .timestamp = parse_timestamp!(.parsed.timestamp, "%Y-%m-%d %H:%M:%S")
         .level = .parsed.level
+        .pid = .parsed.pid
+        .thread = .parsed.thread
+        .logger = .parsed.logger
         .message = .parsed.message
-      }
+        }
+      del(.parsed)
 
 sinks:
   out:
