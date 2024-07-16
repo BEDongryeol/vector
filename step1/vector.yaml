@@ -35,9 +35,18 @@ transforms:
 
 sinks:
   out:
-    type: console
+    type: elasticsearch
     inputs:
       - parse_log
-    encoding:
-      codec: json
-
+    api_version: v7
+    endpoints:
+     - "http://host.docker.internal:9200"
+#    type: console
+#    inputs:
+#      - parse_log
+#    encoding:
+#      codec: json
+#    batch:
+#      max_bytes: 1048576  # 1MB
+#      timeout_secs: 1
+#    socket_keepalive: true
