@@ -16,32 +16,24 @@ transforms:
       - csp-was
     source: |
       .parsed = parse_regex!(.message, r'(?s)^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(?P<level>[A-Z]+)\s+(?P<pid>\d+)\s+---\s+\[(?P<thread>[^\]]+)\]\s+(?P<logger>[^\s]+)\s*:\s*(?P<message>.*)$')
-
-      . = {
-        "platform": .container_name,
-        "timestamp": .parsed.timestamp,
-        "level": .parsed.level,
-        "logger": .parsed.logger,
-        "message": .parsed.message,
-        "thread": .parsed.thread,
-        "pid": .parsed.pid
-      }
+      .platform = .container_name
+      .timestamp = parse_timestamp!(.parsed.timestamp, "%Y-%m-%d %H:%M:%S.%3f")
+      .level = .parsed.level
+      .logger = .parsed.logger
+      .message = .parsed.message
+      .thread = .parsed.thread
+      .pid = .parsed.pid
 
 sinks:
   out:
-    # type: elasticsearch
-    # bulk:
-    #   action: "create"
-    # inputs:
-      # - parse_log
-    # api_version: v7
-    # endpoints:
-    #  - "http://host.docker.internal:9200"
+    type: elasticsearch
+    bulk:
+      action: "create"
+    inputs:
+      - parse_log
+    api_version: v7
+    endpoints:
+     - "http://host.docker.internal:9200"
     # batch:
-      # max_bytes: 10 # 1MB = 1048576
-      # timeout_secs: 20
-   type: console
-   inputs:
-     - parse_log
-   encoding:
-     codec: json
+    #   max_bytes: 10 # 1MB = 1048576
+    #   timeout_secs: 20
