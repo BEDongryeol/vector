@@ -28,7 +28,7 @@ sinks:
   out:
     type: elasticsearch
     bulk:
-      action: "create"
+      action: "index"
     inputs:
       - parse_log
     api_version: v7
