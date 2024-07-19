@@ -1,0 +1,30 @@
+sources:
+  agent:
+    type: socket
+    address: "0.0.0.0:6000"
+    mode: tcp
+    encoding: 
+      codec: json
+
+transforms:
+  parse_log:
+    type: remap
+    inputs:
+      - agent
+    source: |
+      .parsed = parse_regex!(.message, r'(?s)^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(?P<level>[A-Z]+)\s+(?P<pid>\d+)\s+---\s+\[(?P<thread>[^\]]+)\]\s+(?P<logger>[^\s]+)\s*:\s*(?P<message>.*)$')
+      .platform = .container_name
+      .timestamp = parse_timestamp!(.parsed.timestamp, "%Y-%m-%d %H:%M:%S.%3f")
+      .level = .parsed.level
+      .logger = .parsed.logger
+      .message = .parsed.message
+      .thread = .parsed.thread
+      .pid = .parsed.pid
+
+sinks:
+  out:
+    inputs:
+      - parse_log
+    type: console
+    encoding:
+      codec: json
