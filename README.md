@@ -8,11 +8,17 @@ Build data pipeline with Vector
   - [Resolved](https://github.com/BEDongryeol/vector/commit/7a07eef61533bc57436068dd482b6993b5e8e79c) : file은 바로 입력되지만 sink에서 즉시 출력되지 않음
 
 ### ElasticSearch Index로 등록
-
 ISSUE#2
-  -  [Bulk Index](https://github.com/BEDongryeol/vector/commit/ee0cca37d77524c953f834531944984793713d65) : 중복 관련 핸들링이 필요가 없음 => index
+  - [Bulk Index](https://github.com/BEDongryeol/vector/commit/ee0cca37d77524c953f834531944984793713d65) : 중복 관련 핸들링이 필요가 없음 => index
  
+## agent
+[Agent Setting](https://github.com/BEDongryeol/vector/commit/3c3ecd116a54391f3b16af5c86315771e66bad6c)
+  - docker container 분리된 ip로 전송
+  - 오로지 data forwarding 역할
 
+## aggregator
+[Aggregator Setting](https://github.com/BEDongryeol/vector/commit/ea2820de0e365d4a56e74a58c6f77a097b90e09b)
+  - data transform 추가
 
 # Appendix
 ## DOCS
