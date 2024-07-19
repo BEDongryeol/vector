@@ -1,0 +1,15 @@
+sources:
+  csp-was:
+    type: docker_logs
+    include_containers: 
+      ["csp-was"]
+
+sinks:
+  aggregator:
+    type: socket
+    inputs:
+      - csp-was
+    address: "http://172.17.0.4:6000"
+    mode: tcp
+    encoding:
+      codec: raw_message
