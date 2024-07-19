@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  vector-agg:
+    image: timberio/vector:0.39.0-debian
+    container_name: vector-agg
+    volumes:
+      - ~/Documents/vector_git/vector/aggregator/:/etc/vector/
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - TZ=Asia/Seoul
+    ports:
+      - "0.0.0.0:6000:6000"
